@@ -2,17 +2,17 @@ package DNS;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 
 public class MenuGrafico extends JFrame {
     private JList<String> itemList;
     private DefaultListModel<String> listModel;
     private JCheckBox[] checkBoxes;
     private VerArchivos archivos;
+    private JPanel checkBoxPanel; // Agregamos la declaración de checkBoxPanel
 
-    public MenuGrafico(VerArchivos arvhivos) {
-        this.archivos = arvhivos;
+    public MenuGrafico(VerArchivos archivos) {
+        this.archivos = archivos;
         setTitle("Menú Gráfico");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 700);
@@ -25,69 +25,75 @@ public class MenuGrafico extends JFrame {
 
         itemList = new JList<>(listModel);
 
-        checkBoxes = new JCheckBox[listModel.getSize()];
-        for (int i = 0; i < listModel.getSize(); i++) {
-            checkBoxes[i] = new JCheckBox();
-            checkBoxes[i].setSelected(archivos.getPublicar(i));
-        }
-
         itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         itemList.addListSelectionListener(e -> updateCheckBoxes());
-
-        JButton submitButton = new JButton("Enviar");
-        submitButton.addActionListener(e -> {
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() {
-                    for (int i = 0; i < listModel.getSize(); i++) {
-                        if (checkBoxes[i].isSelected()) {
-                            archivos.cambiarPublicar(i, true);
-                        }else{
-                            arvhivos.cambiarPublicar(i, false);
-                        }
-                    }
-                    System.out.println("cambios realizados");
-                    for (int i = 0; i < archivos.getArchivos().size(); i++) {
-                        System.out.println(archivos.getNombre(i) + "." + archivos.getExtension(i) + " , " + " - " + archivos.getPublicar(i));
-                    }
-                    return null;
-                }
-            };
-            worker.execute();
-        });
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(new JScrollPane(itemList), BorderLayout.CENTER);
 
-        JPanel checkBoxPanel = new JPanel();
+        checkBoxPanel = new JPanel(); // Inicializamos checkBoxPanel
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.PAGE_AXIS));
-        for (JCheckBox checkBox : checkBoxes) {
-            checkBoxPanel.add(checkBox);
+
+        checkBoxes = new JCheckBox[listModel.getSize()];
+        for (int i = 0; i < listModel.getSize(); i++) {
+            checkBoxes[i] = new JCheckBox();
+            checkBoxes[i].setSelected(archivos.getPublicar(i));
+            final int index = i;
+
+            checkBoxes[i].addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    archivos.cambiarPublicar(index, true);
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    archivos.cambiarPublicar(index, false);
+                }
+                System.out.println("Cambio realizado para " + archivos.getNombre(index) + "." + archivos.getExtension(index));
+            });
+
+            checkBoxPanel.add(checkBoxes[i]);
         }
-        
+
         panel.add(checkBoxPanel, BorderLayout.EAST);
-        panel.add(submitButton, BorderLayout.SOUTH);
-        
+
         add(panel);
     }
 
     public void cerrar() {
-        dispose(); // Cierra la ventana y libera los recursos asociados
+        dispose();
     }
 
     public void actualizarMenu() {
         listModel.clear();
         for (int i = 0; i < archivos.getArchivos().size(); i++) {
             listModel.addElement(archivos.getNombre(i) + "." + archivos.getExtension(i));
-            checkBoxes[i].setSelected(archivos.getPublicar(i));
         }
+        updateCheckBoxes(); // Actualiza los checkboxes cuando se actualiza la lista de elementos
     }
-    
+
     private void updateCheckBoxes() {
-        for (int i = 0; i < listModel.getSize(); i++) {
-            checkBoxes[i].setText(listModel.getElementAt(i));
+        for (JCheckBox checkBox : checkBoxes) {
+            checkBoxPanel.remove(checkBox); // Elimina los checkboxes existentes
         }
+
+        checkBoxes = new JCheckBox[listModel.getSize()];
+        for (int i = 0; i < listModel.getSize(); i++) {
+            checkBoxes[i] = new JCheckBox();
+            checkBoxes[i].setSelected(archivos.getPublicar(i));
+            final int index = i;
+
+            checkBoxes[i].addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    archivos.cambiarPublicar(index, true);
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    archivos.cambiarPublicar(index, false);
+                }
+                System.out.println("Cambio realizado para " + archivos.getNombre(index) + "." + archivos.getExtension(index));
+            });
+
+            checkBoxPanel.add(checkBoxes[i]); // Agrega los nuevos checkboxes
+        }
+
+        checkBoxPanel.revalidate(); // Actualiza la disposición del panel
+        checkBoxPanel.repaint(); // Repinta el panel
     }
 }
-

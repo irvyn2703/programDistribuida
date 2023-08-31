@@ -2,20 +2,21 @@ package DNS;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 import javax.swing.SwingUtilities;
 
 class VerArchivos extends Thread {
     private String direccion = "C:\\Users\\irvyn\\OneDrive\\Documents\\beca";
     private ArrayList<Archivo> archivo = new ArrayList<>();
-    private String archivoConfig = "C:\\Users\\irvyn\\OneDrive\\Documents\\beca\\config.inf";
+    private String archivoConfig = System.getProperty("user.dir") + "\\DNS\\config.inf";
     private int TTL = 5000;
     private MenuGrafico menu;
 
-
-    public VerArchivos() {
+    public VerArchivos(String direccion) {
+        this.direccion = direccion;
         this.archivo = new ArrayList<>();
+        System.out.println(archivoConfig);
         cargarArchivo(); // Cargar la lista de archivos
     }
 

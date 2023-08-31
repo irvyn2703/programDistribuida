@@ -1,8 +1,0 @@
-5000
-Cardex Simple,pdf,false;
-FORMATO CARTA BAJO PROTESTA DE DECIR VERDAD,pdf,false;
-hola,txt,false;
-Horario de Cursos Otoño 2023,pdf,false;
-irvyn,pdf,false;
-irvynINE,jpg,false;
-PA_OTOÑO_2023_SEMESTRAL_ICC,pdf,false;
