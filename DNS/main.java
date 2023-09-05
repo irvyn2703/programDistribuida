@@ -13,56 +13,56 @@ import java.io.IOException;
 
 public class main {
     public static void main(String[] args){
-        UDP servidor = new UDP();
-
-        String direccion = "";
-        boolean primerInicio = true;
+        UDP servidor = new UDP(); // creamos el objeto UDP
+        String direccion = "";// iniciamos la direcion de la carpeta
+        boolean primerInicio = true;// controlamos si es el primer inicio
 
 
         try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
-            primerInicio = false;
+            // si entramos aqui entonces el archivo config existe y no es el primer inicio del programa
+            primerInicio = false;// no el el primer inicio
             String line;
             int lineCount = 0; // Variable para llevar el conteo de líneas
     
             while ((line = reader.readLine()) != null || lineCount < 3) {
                 lineCount++;
                 if (lineCount == 2) {
-                    direccion = line;
+                    direccion = line;// leemos la dirección de la carpeta
                     System.out.println("direccion previa: " + direccion);
                 }
             }
         } catch (FileNotFoundException e) {
             System.err.println("primer inicio del programa");
-            primerInicio = true;
+            primerInicio = true;// es el primer inicio del programa
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         if (primerInicio == true) {
-            SwingUtilities.invokeLater(() -> {
+            SwingUtilities.invokeLater(() -> {// creamos un menu para obtener la direccion de la carpeta compartida
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     
                 int result = fileChooser.showOpenDialog(null);
     
-                if (result == JFileChooser.APPROVE_OPTION) {
+                if (result == JFileChooser.APPROVE_OPTION) { // cuando tenemos la direccion
                     File selectedDirectory = fileChooser.getSelectedFile();
-                    VerArchivos verArchivos = new VerArchivos(selectedDirectory.getAbsolutePath());
+                    VerArchivos verArchivos = new VerArchivos(selectedDirectory.getAbsolutePath()); // creamos el objeto de verArchivos con la direccion que el usuario nos dio
                     verArchivos.start();
-                    SwingUtilities.invokeLater(() -> {
-                        MenuGrafico menu = new MenuGrafico(verArchivos);
-                        verArchivos.agregarMenu(menu);
-                        menu.setVisible(true);
+                    SwingUtilities.invokeLater(() -> {// creamos el menu grafico
+                        MenuGrafico menu = new MenuGrafico(verArchivos);// creamo y pasamos el objeto de verArchivos al menu
+                        verArchivos.agregarMenu(menu);// vinculamos el menu al objeto de verArchivos
+                        menu.setVisible(true);// mostramos el menu
                     });
                 }
             });
-        }else{
-            VerArchivos verArchivos = new VerArchivos(direccion);
+        }else{// no es el primer inicio del programa
+            VerArchivos verArchivos = new VerArchivos(direccion);// creamos el objeto verArchivos
             verArchivos.start();
             SwingUtilities.invokeLater(() -> {
-                MenuGrafico menu = new MenuGrafico(verArchivos);
-                verArchivos.agregarMenu(menu);
-                menu.setVisible(true);
+                MenuGrafico menu = new MenuGrafico(verArchivos);// creamo y pasamos el objeto de verArchivos al menu
+                verArchivos.agregarMenu(menu);// vinculamos el menu
+                menu.setVisible(true);// mostrmos el menu
             });
         }
 

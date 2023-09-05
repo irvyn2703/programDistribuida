@@ -10,9 +10,5 @@ class Archivo {
         this.extension = extension;
         this.publicar = publicar;
     }
-
-    public String getNombre() {
-        return nombre;
-    }
 }
 
