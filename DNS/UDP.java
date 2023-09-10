@@ -22,16 +22,19 @@ public class UDP extends Thread{
                 socket.receive(receivePacket);
 
                 String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                obtenerMesaje(message);// enviamos el mensaje para procesar
+                obtenerMensaje(message, receivePacket);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void obtenerMesaje(String message) {// en este metodo procesaremos el mensaje
-        System.out.println("Mensaje recibido en el servidor: " + message);
+    public void obtenerMensaje(String message, DatagramPacket receivePacket) {
+        InetAddress clientAddress = receivePacket.getAddress();
+        int clientPort = receivePacket.getPort();
+        System.out.println("Mensaje recibido en el servidor desde " + clientAddress + ":" + clientPort + ": " + message);
     }
+    
 
     public void enviarMensaje(String message, InetAddress destinationAddress, int destinationPort) {// metodo para enviar mensaje
         try {

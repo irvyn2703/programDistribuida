@@ -10,8 +10,10 @@ class VerArchivos extends Thread {
     private String direccion = ""; // direccion donde revisaremos los archivos
     private ArrayList<Archivo> archivo = new ArrayList<>(); // un array donde guargamos cada archivo
     private String archivoConfig = System.getProperty("user.dir") + "\\DNS\\config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
+    private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
     private int TTL = 5000; // tiempo para revisar la carpeta
     private MenuGrafico menu; // menu grafico
+    private String[] ipPc = {"", "", "", ""}; // ip de las pc de los compañeros
 
     public VerArchivos(String direccion) {
         this.direccion = direccion;
@@ -95,18 +97,37 @@ class VerArchivos extends Thread {
                 }if (lineCount == 3) {// la linea 3 es la direccion del config
                     archivoConfig = line;
                     System.out.println("config: " + archivoConfig);
-                }else{// despues de la 3 linea son los archivos previamente guardados tiene una estructura como la siguiente
-                    //nombre_archivo,extencion,(un boolean para saber si se comparte o no)
-                    String[] parts = line.split(",");// obtenemos el nombre,extencion y el boolean
-                    if (parts.length >= 3) {
-                        archivo.add(new Archivo(parts[0], parts[1], Boolean.parseBoolean(parts[2])));// agregamos a la lista de archivos
-                        System.out.println("agregando " + parts[0] + " " + parts[1] + " " + parts[2]);
-                    }
-                    for (Archivo archivo2 : archivo) {
-                        System.out.println("lista ------> " + archivo2.nombre + "." + archivo2.extension + " - " + archivo2.publicar);
-                    }
+                }if (lineCount == 4) {// la linea 4 es la direccion ip del equipo 1
+                    ipPc[0] = line;
+                    System.out.println("pcServer: " + ipPc[0]);
+                }if (lineCount == 5) {// la linea 5 es la direccion ip del equipo 2
+                    ipPc[1] = line;
+                    System.out.println("pcServer: " + ipPc[1]);
+                }if (lineCount == 6) {// la linea 6 es la direccion ip del equipo 3
+                    ipPc[2] = line;
+                    System.out.println("pcServer: " + ipPc[2]);
+                }if (lineCount == 7) {// la linea 7 es la direccion ip del equipo 4
+                    ipPc[3] = line;
+                    System.out.println("pcServer: " + ipPc[3]);
                 }
-    
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("El archivo config.inf no existe. Se creará uno nuevo.");// en caso de no existir el archivo mandamos el mensaje
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivoLongLocal))) {
+            String line;    
+            while ((line = reader.readLine()) != null) {
+                //nombre_archivo,extencion,(un boolean para saber si se comparte o no)
+                String[] parts = line.split(",");// obtenemos el nombre,extencion y el boolean
+                if (parts.length >= 3) {
+                    archivo.add(new Archivo(parts[0], parts[1], Boolean.parseBoolean(parts[2])));// agregamos a la lista de archivos
+                    System.out.println("agregando " + parts[0] + " " + parts[1] + " " + parts[2]);
+                }
+                for (Archivo archivo2 : archivo) {
+                    System.out.println("lista ------> " + archivo2.nombre + "." + archivo2.extension + " - " + archivo2.publicar);
+                }
             }
         } catch (FileNotFoundException e) {
             System.err.println("El archivo de registro no existe. Se creará uno nuevo.");// en caso de no existir el archivo mandamos el mensaje
@@ -123,6 +144,20 @@ class VerArchivos extends Thread {
             writer.newLine();
             writer.write(archivoConfig);// guardamos la direccion del archivo config
             writer.newLine();
+            writer.write(archivoLongLocal);// guardamos la direccion del archivo config
+            writer.newLine();
+            writer.write(ipPc[0]);// guardamos la direccion ip del equipo 1
+            writer.newLine();
+            writer.write(ipPc[1]);// guardamos la direccion ip del equipo 2
+            writer.newLine();
+            writer.write(ipPc[2]);// guardamos la direccion ip del equipo 3
+            writer.newLine();
+            writer.write(ipPc[3]);// guardamos la direccion ip del equipo 4
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoLongLocal))) {// accedemos al config
             for (Archivo archivo : archivo) {// guardamos todos loa archivos en la lista de archivos
                 writer.write(archivo.nombre + "," + archivo.extension + "," + archivo.publicar);
                 writer.newLine();
@@ -151,5 +186,17 @@ class VerArchivos extends Thread {
 
     public boolean getPublicar(int index){// obtenemos el boleano de publicar
         return archivo.get(index).publicar;
+    }
+
+    public String[] getIPs() {
+        return ipPc;
+    }    
+
+    public void setIPs(String cambio, int numEquipo) {
+        if(numEquipo > ipPc.length){
+            System.out.println("error en el numero del equipo: " + numEquipo);
+        }else{
+            ipPc[numEquipo] = cambio;
+        }
     }
 }

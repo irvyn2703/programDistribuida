@@ -1,9 +1,6 @@
 package DNS;
-// librerias para ser cliente
-/*
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-*/
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +13,13 @@ public class main {
         UDP servidor = new UDP(); // creamos el objeto UDP
         String direccion = "";// iniciamos la direcion de la carpeta
         boolean primerInicio = true;// controlamos si es el primer inicio
+
+        try {
+            InetAddress miIP = InetAddress.getLocalHost();
+            System.out.println("Mi dirección IP es: " + miIP.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
 
         try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
