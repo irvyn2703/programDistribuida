@@ -164,13 +164,13 @@ class VerArchivos extends Thread {
             writer.newLine();
             writer.write(archivoLongLocal);// guardamos la direccion del archivo config
             writer.newLine();
-            writer.write(ipPc[0].getHostAddress());// guardamos la direccion ip del equipo 1
+            //writer.write(ipPc[0].getHostAddress());// guardamos la direccion ip del equipo 1
             writer.newLine();
-            writer.write(ipPc[1].getHostAddress());// guardamos la direccion ip del equipo 2
+            //writer.write(ipPc[1].getHostAddress());// guardamos la direccion ip del equipo 2
             writer.newLine();
-            writer.write(ipPc[2].getHostAddress());// guardamos la direccion ip del equipo 3
+            //writer.write(ipPc[2].getHostAddress());// guardamos la direccion ip del equipo 3
             writer.newLine();
-            writer.write(ipPc[3].getHostAddress());// guardamos la direccion ip del equipo 4
+            //writer.write(ipPc[3].getHostAddress());// guardamos la direccion ip del equipo 4
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
