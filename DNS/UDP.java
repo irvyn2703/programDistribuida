@@ -4,6 +4,7 @@ import java.net.*;
 
 public class UDP extends Thread{
     private DatagramSocket socket;
+    private Middleware middleware;
 
     public UDP() {
         try {
@@ -22,19 +23,12 @@ public class UDP extends Thread{
                 socket.receive(receivePacket);
 
                 String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                obtenerMensaje(message, receivePacket);
+                middleware.procesarMensaje(message, receivePacket);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void obtenerMensaje(String message, DatagramPacket receivePacket) {
-        InetAddress clientAddress = receivePacket.getAddress();
-        int clientPort = receivePacket.getPort();
-        System.out.println("Mensaje recibido en el servidor desde " + clientAddress + ":" + clientPort + ": " + message);
-    }
-    
+    }  
 
     public void enviarMensaje(String message, InetAddress destinationAddress, int destinationPort) {// metodo para enviar mensaje
         try {
@@ -45,5 +39,9 @@ public class UDP extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void agregarMiddleware(Middleware mi){
+        middleware = mi;
     }
 }

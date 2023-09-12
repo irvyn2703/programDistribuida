@@ -11,6 +11,7 @@ import java.io.IOException;
 public class main {
     public static void main(String[] args){
         UDP servidor = new UDP(); // creamos el objeto UDP
+        Middleware middleware;
         String direccion = "";// iniciamos la direcion de la carpeta
         boolean primerInicio = true;// controlamos si es el primer inicio
 
@@ -72,6 +73,9 @@ public class main {
 
         
         servidor.start();
+        middleware = new Middleware(servidor);
+        servidor.agregarMiddleware(middleware);
+        middleware.vincularArchivos(verArchivos);
 
         /*
         InetAddress serverAddress;

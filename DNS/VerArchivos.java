@@ -1,6 +1,8 @@
 package DNS;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 //import java.util.stream.Collectors;
 
@@ -13,7 +15,7 @@ class VerArchivos extends Thread {
     private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
     private int TTL = 5000; // tiempo para revisar la carpeta
     private MenuGrafico menu; // menu grafico
-    private String[] ipPc = {"", "", "", ""}; // ip de las pc de los compañeros
+    private InetAddress[] ipPc = new InetAddress[4];// ip de las pc de los compañeros
 
     public VerArchivos(String direccion) {
         this.direccion = direccion;
@@ -98,16 +100,32 @@ class VerArchivos extends Thread {
                     archivoConfig = line;
                     System.out.println("config: " + archivoConfig);
                 }if (lineCount == 4) {// la linea 4 es la direccion ip del equipo 1
-                    ipPc[0] = line;
+                    try {
+                        ipPc[0] = InetAddress.getByName(line);
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("pcServer: " + ipPc[0]);
                 }if (lineCount == 5) {// la linea 5 es la direccion ip del equipo 2
-                    ipPc[1] = line;
+                    try {
+                        ipPc[1] = InetAddress.getByName(line);
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("pcServer: " + ipPc[1]);
                 }if (lineCount == 6) {// la linea 6 es la direccion ip del equipo 3
-                    ipPc[2] = line;
+                    try {
+                        ipPc[2] = InetAddress.getByName(line);
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("pcServer: " + ipPc[2]);
                 }if (lineCount == 7) {// la linea 7 es la direccion ip del equipo 4
-                    ipPc[3] = line;
+                    try {
+                        ipPc[3] = InetAddress.getByName(line);
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("pcServer: " + ipPc[3]);
                 }
             }
@@ -146,13 +164,13 @@ class VerArchivos extends Thread {
             writer.newLine();
             writer.write(archivoLongLocal);// guardamos la direccion del archivo config
             writer.newLine();
-            writer.write(ipPc[0]);// guardamos la direccion ip del equipo 1
+            writer.write(ipPc[0].getHostAddress());// guardamos la direccion ip del equipo 1
             writer.newLine();
-            writer.write(ipPc[1]);// guardamos la direccion ip del equipo 2
+            writer.write(ipPc[1].getHostAddress());// guardamos la direccion ip del equipo 2
             writer.newLine();
-            writer.write(ipPc[2]);// guardamos la direccion ip del equipo 3
+            writer.write(ipPc[2].getHostAddress());// guardamos la direccion ip del equipo 3
             writer.newLine();
-            writer.write(ipPc[3]);// guardamos la direccion ip del equipo 4
+            writer.write(ipPc[3].getHostAddress());// guardamos la direccion ip del equipo 4
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,11 +206,11 @@ class VerArchivos extends Thread {
         return archivo.get(index).publicar;
     }
 
-    public String[] getIPs() {
+    public InetAddress[] getIPs() {
         return ipPc;
     }    
 
-    public void setIPs(String cambio, int numEquipo) {
+    public void setIPs(InetAddress cambio, int numEquipo) {
         if(numEquipo > ipPc.length){
             System.out.println("error en el numero del equipo: " + numEquipo);
         }else{
