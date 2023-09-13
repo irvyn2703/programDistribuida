@@ -71,20 +71,19 @@ public class main {
         }
 
         
+        servidor.start();
         middleware = new Middleware(servidor);
         servidor.agregarMiddleware(middleware);
         middleware.vincularArchivos(verArchivos);
-        
-        servidor.start();
-        verArchivos.start();
+
         /*
         InetAddress serverAddress;
         try {
-            serverAddress = InetAddress.getByName("localhost");
+            serverAddress = InetAddress.getByName("192.168.137.105");
             servidor.enviarMensaje("Hola desde el cliente", serverAddress, 50000);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        */
+         */
     }
 }
