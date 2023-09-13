@@ -238,4 +238,25 @@ class VerArchivos extends Thread {
         }
         return false; // El archivo no existe en la lista o no es publicable
     }    
+
+    public String obtenerArchivosPublicados() {
+        StringBuilder archivosPublicados = new StringBuilder();
+    
+        for (Archivo archivo : archivo) {
+            if (archivo.publicar) {
+                archivosPublicados.append(archivo.nombre);
+                archivosPublicados.append(".");
+                archivosPublicados.append(archivo.extension);
+                archivosPublicados.append(",");
+            }
+        }
+    
+        // Elimina la coma final si existen archivos publicados
+        if (archivosPublicados.length() > 0) {
+            archivosPublicados.deleteCharAt(archivosPublicados.length() - 1);
+        }
+    
+        return archivosPublicados.toString();
+    }
+    
 }
