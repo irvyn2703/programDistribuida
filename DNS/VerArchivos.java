@@ -15,12 +15,24 @@ class VerArchivos extends Thread {
     private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
     private int TTL = 5000; // tiempo para revisar la carpeta
     private MenuGrafico menu; // menu grafico
-    private InetAddress[] ipPc = new InetAddress[4];// ip de las pc de los compañeros
+    public InetAddress[] ipPc = new InetAddress[4];// ip de las pc de los compañeros
 
-    public VerArchivos(String direccion) {
-        this.direccion = direccion;
+    public VerArchivos() {
+        try {
+            // Agregar direcciones IP a tu arreglo
+            ipPc[0] = InetAddress.getByName("192.168.137.105");
+            ipPc[1] = InetAddress.getByName("192.168.137.54");
+            ipPc[2] = InetAddress.getByName("192.168.137.101");
+            ipPc[3] = InetAddress.getByName("192.168.137.10");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         this.archivo = new ArrayList<>();
         cargarArchivo(); // Cargar la lista de archivos
+    }
+
+    public void agregarDireccion(String dir){
+        this.direccion = dir;
     }
 
     public void agregarMenu(MenuGrafico m){
@@ -217,4 +229,13 @@ class VerArchivos extends Thread {
             ipPc[numEquipo] = cambio;
         }
     }
+
+    public boolean archivoExiste(String nombreArchivo, String extencionArchivo) {
+        for (Archivo archivo : archivo) {
+            if (archivo.nombre.equals(nombreArchivo) && archivo.publicar && archivo.extension.equals(extencionArchivo)) {
+                return true; // El archivo existe en la lista y es publicable
+            }
+        }
+        return false; // El archivo no existe en la lista o no es publicable
+    }    
 }

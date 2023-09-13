@@ -15,35 +15,35 @@ class ActualizarMiddle extends Thread{
     }
 
     @Override
-public void run() {
-    while (true) {
-        ttlMaximo = encontrarTTLMaximo();
+    public void run() {
+        while (true) {
+            ttlMaximo = encontrarTTLMaximo();
 
-        // Incrementa el tiempo en 1 milisegundo en cada iteración
-        tiempo = tiempo + 1;
+            // Incrementa el tiempo en 1 milisegundo en cada iteración
+            tiempo = tiempo + 1;
 
-        // Si el tiempo supera el TTL máximo, reinicia el tiempo para evitar errores por numeros altos
-        if (tiempo > ttlMaximo + 1) {
-            tiempo = 0;
-        }
-        
-        // Quiero que cuente el tiempo
-        for (ArchivoGlobales archivoGlobales2 : archivoGlobales) {
-            if (archivoGlobales2.TTL != 0) {
-                // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
-                if (tiempo % archivoGlobales2.TTL == 0) {
-                    servidor.enviarMensaje("mensaje", archivoGlobales2.IP, 5000);
+            // Si el tiempo supera el TTL máximo, reinicia el tiempo para evitar errores por numeros altos
+            if (tiempo > ttlMaximo + 1) {
+                tiempo = 0;
+            }
+            
+            // Quiero que cuente el tiempo
+            for (ArchivoGlobales archivoGlobales2 : archivoGlobales) {
+                if (archivoGlobales2.TTL != 0) {
+                    // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
+                    if (tiempo % archivoGlobales2.TTL == 0) {
+                        servidor.enviarMensaje("mensaje", archivoGlobales2.IP, 5000);
+                    }
                 }
             }
-        }
-        
-        try {
-            Thread.sleep(1); // Espera 1 milisegundo antes de la siguiente iteración
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            
+            try {
+                Thread.sleep(1); // Espera 1 milisegundo antes de la siguiente iteración
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
-}
 
 
     public void actualizarArchivos(ArrayList<ArchivoGlobales> original){

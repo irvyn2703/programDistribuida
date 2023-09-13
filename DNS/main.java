@@ -14,6 +14,7 @@ public class main {
         Middleware middleware;
         String direccion = "";// iniciamos la direcion de la carpeta
         boolean primerInicio = true;// controlamos si es el primer inicio
+        VerArchivos verArchivos = new VerArchivos();
 
         try {
             InetAddress miIP = InetAddress.getLocalHost();
@@ -52,8 +53,7 @@ public class main {
     
                 if (result == JFileChooser.APPROVE_OPTION) { // cuando tenemos la direccion
                     File selectedDirectory = fileChooser.getSelectedFile();
-                    VerArchivos verArchivos = new VerArchivos(selectedDirectory.getAbsolutePath()); // creamos el objeto de verArchivos con la direccion que el usuario nos dio
-                    verArchivos.start();
+                    verArchivos.agregarDireccion(selectedDirectory.getAbsolutePath());
                     SwingUtilities.invokeLater(() -> {// creamos el menu grafico
                         MenuGrafico menu = new MenuGrafico(verArchivos);// creamo y pasamos el objeto de verArchivos al menu
                         verArchivos.agregarMenu(menu);// vinculamos el menu al objeto de verArchivos
@@ -62,8 +62,7 @@ public class main {
                 }
             });
         }else{// no es el primer inicio del programa
-            VerArchivos verArchivos = new VerArchivos(direccion);// creamos el objeto verArchivos
-            verArchivos.start();
+            verArchivos.agregarDireccion(direccion);
             SwingUtilities.invokeLater(() -> {
                 MenuGrafico menu = new MenuGrafico(verArchivos);// creamo y pasamos el objeto de verArchivos al menu
                 verArchivos.agregarMenu(menu);// vinculamos el menu
@@ -72,11 +71,12 @@ public class main {
         }
 
         
-        servidor.start();
         middleware = new Middleware(servidor);
         servidor.agregarMiddleware(middleware);
         middleware.vincularArchivos(verArchivos);
-
+        
+        servidor.start();
+        verArchivos.start();
         /*
         InetAddress serverAddress;
         try {
