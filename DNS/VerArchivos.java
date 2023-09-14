@@ -13,6 +13,9 @@ class VerArchivos extends Thread {
     private ArrayList<Archivo> archivo = new ArrayList<>(); // un array donde guargamos cada archivo
     private String archivoConfig = System.getProperty("user.dir") + "\\DNS\\config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
     private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
+    //direciones para ubuntu
+    //private String archivoConfig = System.getProperty("user.dir") + "/DNS/config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
+    //private String archivoLongLocal = System.getProperty("user.dir") + "/DNS/longLocal.inf"; // archivo config donde guardamos la lista de archivos    
     private int TTL = 5000; // tiempo para revisar la carpeta
     private MenuGrafico menu; // menu grafico
     private Middleware middleware; // middleware

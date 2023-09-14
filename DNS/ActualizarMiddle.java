@@ -67,10 +67,6 @@ class ActualizarMiddle extends Thread{
                     }
                 }
             }
-            System.out.println(" ------------ > Lista Global al final del ciclo < ------------- ");
-            for (ArchivoGlobales archivo : archivoGlobales) {
-                System.out.println(archivo.nombre + "." + archivo.extension);
-            }
 
             
             

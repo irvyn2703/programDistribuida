@@ -19,8 +19,10 @@ public class main {
         middleware = new Middleware(servidor);
         servidor.agregarMiddleware(middleware);
         middleware.vincularArchivos(verArchivos);
-        
+
         try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
+            // linea para linux
+        // try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/DNS/config.inf"))) {
             // si entramos aqui entonces el archivo config existe y no es el primer inicio del programa
             primerInicio = false;// no el el primer inicio
             String line;
@@ -72,14 +74,5 @@ public class main {
 
         servidor.start();
         middleware.start();
-        /*
-        InetAddress serverAddress;
-        try {
-            serverAddress = InetAddress.getByName("192.168.137.105");
-            servidor.enviarMensaje("Hola desde el cliente", serverAddress, 50000);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-         */
     }
 }

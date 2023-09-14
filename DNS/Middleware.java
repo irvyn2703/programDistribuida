@@ -107,8 +107,6 @@ public class Middleware extends Thread{
                 if (archivosLocales.archivoExiste(nombreArchivo, extensionArchivo) == true) {
                     String mensaje = "101," + nombreArchivo + "." + extensionArchivo;
                     enviarMensaje(mensaje, clientAddress, clientPort); // respuesta autoritativa de mi servidor
-                    actualizarTTL.estadoPeticion = 1;
-                    System.out.println(actualizarTTL.estadoPeticion);
                 }else{
                     if (archivoExiste(nombreArchivo,extensionArchivo) == true){ 
                         String mensaje = "101," + nombreArchivo + "." + extensionArchivo; // respuesta autoritativa de otra maquina
@@ -120,11 +118,9 @@ public class Middleware extends Thread{
                 break;
             case 101:
                 actualizarTTL.estadoPeticion = 1;
-                System.out.println(actualizarTTL.estadoPeticion);
                 break;
             case 102:
                 actualizarTTL.estadoPeticion = 2;
-                System.out.println(actualizarTTL.estadoPeticion);
                 break;
             case 200: // codigo para enviar la lista local
                 enviarMensaje(("201," + archivosLocales.obtenerArchivosPublicados()), clientAddress, clientPort);
