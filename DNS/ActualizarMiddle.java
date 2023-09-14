@@ -1,5 +1,9 @@
 package DNS;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 
 class ActualizarMiddle extends Thread{
@@ -27,15 +31,36 @@ class ActualizarMiddle extends Thread{
                 tiempo = 0;
             }
             
-            // Quiero que cuente el tiempo
             for (ArchivoGlobales archivoGlobales2 : archivoGlobales) {
-                if (archivoGlobales2.TTL != 0) {
-                    // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
-                    if (tiempo % archivoGlobales2.TTL == 0) {
-                        servidor.enviarMensaje("mensaje", archivoGlobales2.IP, 5000);
+            if (archivoGlobales2.TTL != 0) {
+                // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
+                if (tiempo % archivoGlobales2.TTL == 0) {
+                    try (Socket socket = new Socket(archivoGlobales2.IP, 5000)) {
+                        ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
+                        ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
+
+                        // Enviar un mensaje al servidor
+                        outStream.writeObject("100" + "," + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
+
+                        // Esperar la respuesta del servidor
+                        String respuesta = (String) inStream.readObject();
+
+                        // Procesar la respuesta según sea necesario
+                        if (respuesta.equals("102")) {
+                            // La respuesta es la esperada
+                            System.out.println("El archivo: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension + "verificado");
+                        } else {
+                            // La respuesta no es la esperada
+                            archivoGlobales.remove(archivoGlobales2);
+                            System.out.println("Se eliminó el archivo global: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
             }
+        }
+            
             
             try {
                 Thread.sleep(1); // Espera 1 milisegundo antes de la siguiente iteración
@@ -46,7 +71,7 @@ class ActualizarMiddle extends Thread{
     }
 
 
-    public void actualizarArchivos(ArrayList<ArchivoGlobales> original){
+    public void vincularArchivos(ArrayList<ArchivoGlobales> original){
         archivoGlobales = original;
     }
 

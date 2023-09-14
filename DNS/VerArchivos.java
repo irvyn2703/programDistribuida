@@ -248,6 +248,9 @@ class VerArchivos extends Thread {
                 archivosPublicados.append(".");
                 archivosPublicados.append(archivo.extension);
                 archivosPublicados.append(",");
+                // para obtener el ttl
+                //archivosPublicados.append(TTL);
+                //archivosPublicados.append(",");
             }
         }
     
