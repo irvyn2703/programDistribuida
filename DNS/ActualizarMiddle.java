@@ -5,12 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 class ActualizarMiddle extends Thread{
     private ArrayList<ArchivoGlobales> archivoGlobales;
     private UDP servidor;
     private int tiempo = 0;
     private int ttlMaximo = 0;
+    public int estadoPeticion = 0; // 0 = ninguna respuesta, 1 = respuesta afirmativa, 2 = respuesta negativa
+
 
     // Constructor que acepta UDP y ArrayList<ArchivoGlobales>
     public ActualizarMiddle(UDP serv, ArrayList<ArchivoGlobales> archivos) {
@@ -31,36 +34,44 @@ class ActualizarMiddle extends Thread{
                 tiempo = 0;
             }
             
-            for (ArchivoGlobales archivoGlobales2 : archivoGlobales) {
-            if (archivoGlobales2.TTL != 0) {
-                // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
-                if (tiempo % archivoGlobales2.TTL == 0) {
-                    System.out.println("verificando: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
-                    try (Socket socket = new Socket(archivoGlobales2.IP, 5000)) {
-                        ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
-                        ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
+            Iterator<ArchivoGlobales> iterator = archivoGlobales.iterator();
+            while (iterator.hasNext()) {
+                ArchivoGlobales archivoGlobales2 = iterator.next();
+                if (archivoGlobales2.TTL != 0) {
+                    // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
+                    if (tiempo % archivoGlobales2.TTL == 0) {
+                        System.out.println("verificando " + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
+                        estadoPeticion = 0;
+                        servidor.enviarMensaje("100," + archivoGlobales2.nombre + "." + archivoGlobales2.extension, archivoGlobales2.IP, 5000);
 
-                        // Enviar un mensaje al servidor
-                        outStream.writeObject("100" + "," + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
+                        // Esperamos hasta recibir la respuesta o hasta que pase un tiempo máximo
+                        long tiempoInicial = System.currentTimeMillis();
+                        long tiempoMaximoEspera = 8000; // Tiempo máximo de espera en milisegundos (30 segundos)
 
-                        // Esperar la respuesta del servidor
-                        String respuesta = (String) inStream.readObject();
-
-                        // Procesar la respuesta según sea necesario
-                        if (respuesta.equals("102")) {
-                            // La respuesta es la esperada
-                            System.out.println("El archivo: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension + "verificado");
-                        } else {
-                            // La respuesta no es la esperada
-                            archivoGlobales.remove(archivoGlobales2);
+                        while (estadoPeticion == 0 && System.currentTimeMillis() - tiempoInicial < tiempoMaximoEspera) {
+                            try {
+                                Thread.sleep(10); // Pausa de 10 milisegundos (puedes ajustar el valor según tus necesidades)
+                            } catch (InterruptedException e) {
+                                // Manejo de la excepción, si es necesario
+                            }
+                        }
+                        
+                        // Verificamos el estado y eliminamos si es necesario
+                        if (estadoPeticion == 1) {
+                            System.out.println("archivo: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension + "   --->   verificado");
+                        } else if (estadoPeticion == 2) {
+                            System.out.println("archivo: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension + "   --->   fue eliminado");
+                            iterator.remove(); // Eliminamos el elemento usando el iterador
                             System.out.println("Se eliminó el archivo global: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
                         }
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
                     }
                 }
             }
-        }
+            System.out.println(" ------------ > Lista Global al final del ciclo < ------------- ");
+            for (ArchivoGlobales archivo : archivoGlobales) {
+                System.out.println(archivo.nombre + "." + archivo.extension);
+            }
+
             
             
             try {
