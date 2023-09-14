@@ -23,7 +23,7 @@ public class UDP extends Thread{
                 socket.receive(receivePacket);
 
                 String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                System.out.println(message);
+                System.out.println();
                 middleware.procesarMensaje(message, receivePacket);
             }
         } catch (IOException e) {

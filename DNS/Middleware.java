@@ -36,14 +36,24 @@ public class Middleware extends Thread{
         while (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
             try {
                 sleep(6000);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        
             for (int i = 0; i < listaObtenida.length; i++) {
-                if (listaObtenida[i] == false) {
-                    System.out.println("pidiendo listas de los demas equipos");
-                    // solicitamos la lista de la otra pc
-                    servidor.enviarMensaje("200",archivosLocales.ipPc[i], 5000);
+                if (!listaObtenida[i]) {
+                    System.out.println("pidiendo listas de los demás equipos");
+                    // Solicitamos la lista de la otra pc
+                    servidor.enviarMensaje("200", archivosLocales.ipPc[i], 5000);
+        
+                    // Esperamos hasta recibir la respuesta o hasta que pase un tiempo máximo
+                    long tiempoInicial = System.currentTimeMillis();
+                    long tiempoMaximoEspera = 8000; // Tiempo máximo de espera en milisegundos (30 segundos)
+        
+                    while (!listaObtenida[i] && System.currentTimeMillis() - tiempoInicial < tiempoMaximoEspera) {
+                        // Aquí puedes agregar una espera corta (por ejemplo, sleep) para evitar un bucle de CPU al esperar.
+                        // Pero ten en cuenta que podría aumentar el tiempo total de espera.
+                    }
                 }
             }
         }
