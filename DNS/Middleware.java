@@ -35,7 +35,7 @@ public class Middleware extends Thread{
         System.out.println("iniciando middleware");
         while (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
             try {
-                sleep(5000);
+                sleep(6000);
             } catch (Exception e) {
                 e.printStackTrace();
             }

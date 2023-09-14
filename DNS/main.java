@@ -18,8 +18,6 @@ public class main {
 
         middleware = new Middleware(servidor);
         servidor.agregarMiddleware(middleware);
-        servidor.start();
-        middleware.start();
         middleware.vincularArchivos(verArchivos);
         
         try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
@@ -72,6 +70,8 @@ public class main {
             });
         }
 
+        servidor.start();
+        middleware.start();
         /*
         InetAddress serverAddress;
         try {
