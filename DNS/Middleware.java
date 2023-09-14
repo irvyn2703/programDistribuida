@@ -117,7 +117,7 @@ public class Middleware extends Thread{
                 }
                 break;
             case 200: // codigo para enviar la lista local
-                enviarMensaje(("201" + archivosLocales.obtenerArchivosPublicados()), clientAddress, clientPort);
+                enviarMensaje(("201," + archivosLocales.obtenerArchivosPublicados()), clientAddress, clientPort);
                 break;
 
             case 201: // codigo para recibir la lista

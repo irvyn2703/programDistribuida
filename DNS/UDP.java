@@ -8,7 +8,7 @@ public class UDP extends Thread{
 
     public UDP() {
         try {
-            socket = new DatagramSocket(50000); // agregamos el puerto
+            socket = new DatagramSocket(5000); // agregamos el puerto
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -24,7 +24,7 @@ public class UDP extends Thread{
 
                 String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
                 System.out.println(message);
-                //middleware.procesarMensaje(message, receivePacket);
+                middleware.procesarMensaje(message, receivePacket);
             }
         } catch (IOException e) {
             e.printStackTrace();

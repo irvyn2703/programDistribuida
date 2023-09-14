@@ -22,6 +22,8 @@ class VerArchivos extends Thread {
         try {
             // Agregar direcciones IP a tu arreglo
             ipPc[0] = InetAddress.getByName("192.168.100.95");
+            ipPc[0] = InetAddress.getByName("192.168.100.14");
+
             // descomentar segun el numero de usuarios
             /*
             ipPc[1] = InetAddress.getByName("192.168.137.54");
