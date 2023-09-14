@@ -35,6 +35,7 @@ class ActualizarMiddle extends Thread{
             if (archivoGlobales2.TTL != 0) {
                 // Verifica si el cociente entre tiempo y TTL es un número entero ejmplo 1000/1000 = 1 1500/1000 = 1.5
                 if (tiempo % archivoGlobales2.TTL == 0) {
+                    System.out.println("verificando: " + archivoGlobales2.nombre + "." + archivoGlobales2.extension);
                     try (Socket socket = new Socket(archivoGlobales2.IP, 5000)) {
                         ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
                         ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());

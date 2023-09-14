@@ -59,15 +59,13 @@ public class Middleware extends Thread{
         }
 
         System.out.println("lista global obtenida");
-        while (true) {
-            actualizarTTL.start();
-        }
+        actualizarTTL.start();
     }
 
     public void procesarMensaje(String message, DatagramPacket receivePacket){
         InetAddress clientAddress = receivePacket.getAddress();
         int clientPort = receivePacket.getPort();
-        System.out.println("Mensaje recibido en el servidor desde " + clientAddress + ", " + clientPort);
+        System.out.println("Mensaje recibido en el servidor desde " + clientAddress + ", " + clientPort + ":" + message);
         String[] elementos = message.split(",");
         int primerNumero = 0;
         List<String> elementosRestantes = new ArrayList<String>();
@@ -80,17 +78,9 @@ public class Middleware extends Thread{
                 System.out.println("codigo: " + primerNumero);
 
                 for (int i = 1; i < elementos.length; i++) {
-                    String elemento = elementos[i].trim();
-                    if (elemento.contains(".")) {
-                        // Si el elemento contiene un '.', entonces debe ser dividido en nombre y extensión
-                        String[] partes = elemento.split(".");
-                        if (partes.length == 2) {
-                            elementosRestantes.add(partes[0].trim()); // Agrega el nombre
-                            elementosRestantes.add(partes[1].trim()); // Agrega la extensión
-                        }
-                    } else {
-                        elementosRestantes.add(elemento); // Agrega los elementos restantes a la lista
-                    }
+                    String[] elementos2 = elementos[i].split("\\.");
+                    elementosRestantes.add(elementos2[0]); // Agrega el nombre
+                    elementosRestantes.add(elementos2[1]); // Agrega la extensión
                 }
 
                 System.out.println("Elementos restantes: " + elementosRestantes);
@@ -132,10 +122,11 @@ public class Middleware extends Thread{
 
             case 201: // codigo para recibir la lista
                 for (int i = 0; i < elementosRestantes.size(); i = i + 2) {
+                    System.out.println("agregando " + elementosRestantes.get(i) + "." + elementosRestantes.get(i+1));
                     agregarArchivoGlobal(elementosRestantes.get(i), elementosRestantes.get(i+1), clientAddress);
                 }
                 for (int i = 0; i < archivosLocales.ipPc.length; i++) {
-                    if (archivosLocales.ipPc[i] == clientAddress) {
+                    if (archivosLocales.ipPc[i].equals(clientAddress)) {
                         listaObtenida[i] = true;
                     }
                 }
@@ -234,7 +225,7 @@ public class Middleware extends Thread{
     
     public void nuevoArchivoLocal(String nombre, String extension){
         for (int i = 0; i < archivosLocales.ipPc.length; i++) {
-            if (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
+            if (listaObtenida[0] == true /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
                 enviarMensaje("300," + nombre + "." + extension, archivosLocales.ipPc[i], 5000);
             }
         }
