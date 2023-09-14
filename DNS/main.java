@@ -16,14 +16,12 @@ public class main {
         boolean primerInicio = true;// controlamos si es el primer inicio
         VerArchivos verArchivos = new VerArchivos();
 
-        try {
-            InetAddress miIP = InetAddress.getLocalHost();
-            System.out.println("Mi dirección IP es: " + miIP.getHostAddress());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-
+        middleware = new Middleware(servidor);
+        servidor.agregarMiddleware(middleware);
+        servidor.start();
+        middleware.start();
+        middleware.vincularArchivos(verArchivos);
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
             // si entramos aqui entonces el archivo config existe y no es el primer inicio del programa
             primerInicio = false;// no el el primer inicio
@@ -57,6 +55,8 @@ public class main {
                     SwingUtilities.invokeLater(() -> {// creamos el menu grafico
                         MenuGrafico menu = new MenuGrafico(verArchivos);// creamo y pasamos el objeto de verArchivos al menu
                         verArchivos.agregarMenu(menu);// vinculamos el menu al objeto de verArchivos
+                        verArchivos.start();
+                        verArchivos.vincularMiddleware(middleware);
                         menu.setVisible(true);// mostramos el menu
                     });
                 }
@@ -66,16 +66,11 @@ public class main {
             SwingUtilities.invokeLater(() -> {
                 MenuGrafico menu = new MenuGrafico(verArchivos);// creamo y pasamos el objeto de verArchivos al menu
                 verArchivos.agregarMenu(menu);// vinculamos el menu
+                verArchivos.vincularMiddleware(middleware);
+                verArchivos.start();
                 menu.setVisible(true);// mostrmos el menu
             });
         }
-
-        
-        servidor.start();
-        middleware = new Middleware(servidor);
-        servidor.agregarMiddleware(middleware);
-        middleware.vincularArchivos(verArchivos);
-        middleware.start();
 
         /*
         InetAddress serverAddress;

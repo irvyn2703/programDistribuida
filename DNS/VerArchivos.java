@@ -73,7 +73,6 @@ class VerArchivos extends Thread {
 
                 if (!existeEnLista) { // en caso de no existir lo agregamos
                     archivo.add(new Archivo(nombre, extension, publicar)); // agregamos al objeto Archivo
-                    middleware.nuevoArchivoLocal(nombre, extension);
                     System.out.println("agregando " + nombre + " " + extension + " " + publicar);
                 }
             }
@@ -210,6 +209,9 @@ class VerArchivos extends Thread {
 
     public void cambiarPublicar(int index, boolean cambio){// cambiamos el boolean publicar(en el objeto de MenuGrafico)
         archivo.get(index).publicar = cambio;
+        if (cambio == true) {
+            middleware.nuevoArchivoLocal(archivo.get(index).nombre, archivo.get(index).extension);
+        }
     }
 
     public String getNombre(int index){// obtenemos el nombre

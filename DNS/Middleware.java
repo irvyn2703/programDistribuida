@@ -18,7 +18,7 @@ public class Middleware extends Thread{
     private ArrayList<ArchivoGlobales> archivoGlobal = new ArrayList<>(); // un array donde guargamos cada archivo
     private UDP servidor;
     private VerArchivos archivosLocales;
-    public boolean[] listaObtenida = new boolean[archivosLocales.ipPc.length]; // controla si obtuvimos las listas (se inicializa en false)
+    public boolean[] listaObtenida = new boolean[1]; // controla si obtuvimos las listas (se inicializa en false)
     private ActualizarMiddle actualizarTTL;
     private String archivoLong = System.getProperty("user.dir") + "\\DNS\\longGlobal.inf";;
 
@@ -32,20 +32,23 @@ public class Middleware extends Thread{
     @Override
     public void run() {
         // obtenemos las listas de los demas usuarios
+        System.out.println("iniciando middleware");
         while (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
-            for (int i = 0; i < listaObtenida.length - 1; i++) {
+            try {
+                sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            for (int i = 0; i < listaObtenida.length; i++) {
                 if (listaObtenida[i] == false) {
+                    System.out.println("pidiendo listas de los demas equipos");
                     // solicitamos la lista de la otra pc
                     servidor.enviarMensaje("200",archivosLocales.ipPc[i], 5000);
                 }
             }
-            try {
-                sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
+        System.out.println("lista global obtenida");
         while (true) {
             actualizarTTL.start();
         }
@@ -221,7 +224,9 @@ public class Middleware extends Thread{
     
     public void nuevoArchivoLocal(String nombre, String extension){
         for (int i = 0; i < archivosLocales.ipPc.length; i++) {
-            enviarMensaje("300," + nombre + "." + extension, archivosLocales.ipPc[i], 5000);
+            if (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
+                enviarMensaje("300," + nombre + "." + extension, archivosLocales.ipPc[i], 5000);
+            }
         }
     }
 }

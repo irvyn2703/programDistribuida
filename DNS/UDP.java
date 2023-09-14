@@ -36,7 +36,7 @@ public class UDP extends Thread{
             byte[] sendData = message.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destinationAddress, destinationPort);
             socket.send(sendPacket);// enviamos el mensaje
-            System.out.println("Mensaje enviado desde el cliente: " + message);
+            System.out.println("Mensaje enviado a " + destinationAddress + ": " + message);
         } catch (IOException e) {
             e.printStackTrace();
         }
