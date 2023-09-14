@@ -15,15 +15,19 @@ class VerArchivos extends Thread {
     private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
     private int TTL = 5000; // tiempo para revisar la carpeta
     private MenuGrafico menu; // menu grafico
-    public InetAddress[] ipPc = new InetAddress[4];// ip de las pc de los compañeros
+    private Middleware middleware; // middleware
+    public InetAddress[] ipPc = new InetAddress[1];// ip de las pc de los compañeros
 
     public VerArchivos() {
         try {
             // Agregar direcciones IP a tu arreglo
-            ipPc[0] = InetAddress.getByName("192.168.137.105");
+            ipPc[0] = InetAddress.getByName("192.168.100.95");
+            // descomentar segun el numero de usuarios
+            /*
             ipPc[1] = InetAddress.getByName("192.168.137.54");
             ipPc[2] = InetAddress.getByName("192.168.137.101");
             ipPc[3] = InetAddress.getByName("192.168.137.10");
+             */
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -69,6 +73,7 @@ class VerArchivos extends Thread {
 
                 if (!existeEnLista) { // en caso de no existir lo agregamos
                     archivo.add(new Archivo(nombre, extension, publicar)); // agregamos al objeto Archivo
+                    middleware.nuevoArchivoLocal(nombre, extension);
                     System.out.println("agregando " + nombre + " " + extension + " " + publicar);
                 }
             }
@@ -118,7 +123,8 @@ class VerArchivos extends Thread {
                         e.printStackTrace();
                     }
                     System.out.println("pcServer: " + ipPc[0]);
-                }if (lineCount == 5) {// la linea 5 es la direccion ip del equipo 2
+                }/*
+                if (lineCount == 5) {// la linea 5 es la direccion ip del equipo 2
                     try {
                         ipPc[1] = InetAddress.getByName(line);
                     } catch (UnknownHostException e) {
@@ -139,7 +145,7 @@ class VerArchivos extends Thread {
                         e.printStackTrace();
                     }
                     System.out.println("pcServer: " + ipPc[3]);
-                }
+                } */
             }
         } catch (FileNotFoundException e) {
             System.err.println("El archivo config.inf no existe. Se creará uno nuevo.");// en caso de no existir el archivo mandamos el mensaje
@@ -176,14 +182,14 @@ class VerArchivos extends Thread {
             writer.newLine();
             writer.write(archivoLongLocal);// guardamos la direccion del archivo config
             writer.newLine();
-            //writer.write(ipPc[0].getHostAddress());// guardamos la direccion ip del equipo 1
-            writer.newLine();
+            writer.write(ipPc[0].getHostAddress());// guardamos la direccion ip del equipo 1
+            //writer.newLine();
             //writer.write(ipPc[1].getHostAddress());// guardamos la direccion ip del equipo 2
-            writer.newLine();
+            //writer.newLine();
             //writer.write(ipPc[2].getHostAddress());// guardamos la direccion ip del equipo 3
-            writer.newLine();
+            //writer.newLine();
             //writer.write(ipPc[3].getHostAddress());// guardamos la direccion ip del equipo 4
-            writer.newLine();
+            //writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -260,6 +266,10 @@ class VerArchivos extends Thread {
         }
     
         return archivosPublicados.toString();
+    }
+
+    public void vincularMiddleware(Middleware midd) {
+        middleware = midd;
     }
     
 }

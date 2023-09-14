@@ -75,6 +75,7 @@ public class main {
         middleware = new Middleware(servidor);
         servidor.agregarMiddleware(middleware);
         middleware.vincularArchivos(verArchivos);
+        middleware.start();
 
         /*
         InetAddress serverAddress;

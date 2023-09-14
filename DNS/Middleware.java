@@ -17,8 +17,8 @@ import java.util.List;
 public class Middleware extends Thread{
     private ArrayList<ArchivoGlobales> archivoGlobal = new ArrayList<>(); // un array donde guargamos cada archivo
     private UDP servidor;
-    public boolean[] listaObtenida = new boolean[4]; // controla si obtuvimos las listas (se inicializa en false)
     private VerArchivos archivosLocales;
+    public boolean[] listaObtenida = new boolean[archivosLocales.ipPc.length]; // controla si obtuvimos las listas (se inicializa en false)
     private ActualizarMiddle actualizarTTL;
     private String archivoLong = System.getProperty("user.dir") + "\\DNS\\longGlobal.inf";;
 
@@ -32,7 +32,7 @@ public class Middleware extends Thread{
     @Override
     public void run() {
         // obtenemos las listas de los demas usuarios
-        while (listaObtenida[0] == false || listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false) {
+        while (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
             for (int i = 0; i < listaObtenida.length - 1; i++) {
                 if (listaObtenida[i] == false) {
                     // solicitamos la lista de la otra pc
@@ -120,6 +120,11 @@ public class Middleware extends Thread{
             case 201: // codigo para recibir la lista
                 for (int i = 0; i < elementosRestantes.size(); i = i + 2) {
                     agregarArchivoGlobal(elementosRestantes.get(i), elementosRestantes.get(i+1), clientAddress);
+                }
+                for (int i = 0; i < archivosLocales.ipPc.length; i++) {
+                    if (archivosLocales.ipPc[i] == clientAddress) {
+                        listaObtenida[i] = true;
+                    }
                 }
 
             case 300: // codigo para agregar archivo a la lista global
@@ -214,5 +219,9 @@ public class Middleware extends Thread{
         }
     }
     
-    
+    public void nuevoArchivoLocal(String nombre, String extension){
+        for (int i = 0; i < archivosLocales.ipPc.length; i++) {
+            enviarMensaje("300," + nombre + "." + extension, archivosLocales.ipPc[i], 5000);
+        }
+    }
 }
