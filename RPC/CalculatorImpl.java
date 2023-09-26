@@ -16,6 +16,7 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
 
     private int contador;
     private int stopDePara;
+    private int numClientes;
     private List<String> hosts;
 
     public CalculatorImpl() throws RemoteException{
@@ -23,6 +24,7 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
         this.contador = 0;
         this.stopDePara = 100;
         this.hosts = new ArrayList<String>();
+        this.numClientes = 0;
     }
 
     public int add(int a, int b) throws RemoteException{
@@ -38,8 +40,11 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
             if (hosts.isEmpty() || !clientIP.equals(hosts.get(hosts.size() - 1))) {
                 this.contador++;
                 hosts.add(clientIP);
+                if(!hosts.contains(clientIP)){
+                    numClientes++;
+                }
                 // Imprimimos la IP y el contador
-                System.out.println("Client IP: " + clientIP + " response:" + this.contador);
+                System.out.println("Client IP: " + clientIP + " response:" + this.contador + "numero de clientes:" + numClientes);
                 return this.contador;
             }
             return -1;
@@ -50,9 +55,6 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
     }
 
     public int para()throws RemoteException{
-        if (contador >= 100) {
-            return 1;
-        }
-        return 0;
+        return (stopDePara/numClientes);
     }
 }

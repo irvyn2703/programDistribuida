@@ -10,21 +10,19 @@ public class Client {
             List<Integer> resultados = new ArrayList<>();
 
             //Conectar al registro RMI en el servidor
-            Registry registry = LocateRegistry.getRegistry("localhost",1100);
+            Registry registry = LocateRegistry.getRegistry("192.168.100.14",1100);
 
             //Obtener una referencia al objeto remoto utilizando su nombre registrado
             RemoteCalculator calculator = (RemoteCalculator) registry.lookup("Calculator");
-            
-            //llamar al metodo remoto
-            //int result = calculator.contador();
-            //System.out.println("Resultado : " + result);
+            int numRespuestas = 0;
             do{
                 int aux = calculator.contador();
                 if (aux != -1) {
                     resultados.add(aux);
                     System.out.println("Response: " + aux);
+                    numRespuestas++;
                 }
-            }while (calculator.para() == 0);
+            }while (numRespuestas < calculator.para());
 
         }catch(Exception error){
             error.printStackTrace();
