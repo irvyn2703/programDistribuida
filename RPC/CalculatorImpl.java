@@ -38,12 +38,10 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
             if (hosts.isEmpty() || !clientIP.equals(hosts.get(hosts.size() - 1))) {
                 this.contador++;
                 hosts.add(clientIP);
+                // Imprimimos la IP y el contador
+                System.out.println("Client IP: " + clientIP + " response:" + this.contador);
                 return this.contador;
             }
-    
-            // Imprimimos la IP y el contador
-            System.out.println("Client IP: " + clientIP + " response:" + this.contador);
-    
             return -1;
         } catch (ServerNotActiveException error) {
             error.printStackTrace();
