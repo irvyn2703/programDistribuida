@@ -18,7 +18,7 @@ public class Middleware extends Thread{
     private ArrayList<ArchivoGlobales> archivoGlobal = new ArrayList<>(); // un array donde guargamos cada archivo
     private UDP servidor;
     private VerArchivos archivosLocales;
-    public boolean[] listaObtenida = new boolean[1]; // controla si obtuvimos las listas (se inicializa en false)
+    public boolean[] listaObtenida = new boolean[2]; // controla si obtuvimos las listas (se inicializa en false)
     private ActualizarMiddle actualizarTTL;
     private String archivoLong = System.getProperty("user.dir") + "\\DNS\\longGlobal.inf";;
 
@@ -33,7 +33,7 @@ public class Middleware extends Thread{
     public void run() {
         // obtenemos las listas de los demas usuarios
         System.out.println("iniciando middleware");
-        while (listaObtenida[0] == false /*|| listaObtenida[1] == false || listaObtenida[2] == false || listaObtenida[3] == false*/) {
+        while (listaObtenida[0] == false/* || listaObtenida[2] == false || listaObtenida[3] == false*/) {
             try {
                 sleep(6000);
             } catch (InterruptedException e) {
@@ -211,7 +211,7 @@ public class Middleware extends Thread{
 
     public void agregarArchivoGlobal(String nombre, String extension, InetAddress ip) {
         // ArchivoGlobales archivo = new ArchivoGlobales(nombre, extension, ip, ttl);
-        ArchivoGlobales archivo = new ArchivoGlobales(nombre, extension, ip, 5000);
+        ArchivoGlobales archivo = new ArchivoGlobales(nombre, extension, ip, 30000);
         archivoGlobal.add(archivo);
     }
 

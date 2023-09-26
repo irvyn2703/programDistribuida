@@ -11,20 +11,23 @@ import javax.swing.SwingUtilities;
 class VerArchivos extends Thread {
     private String direccion = ""; // direccion donde revisaremos los archivos
     private ArrayList<Archivo> archivo = new ArrayList<>(); // un array donde guargamos cada archivo
-    private String archivoConfig = System.getProperty("user.dir") + "\\DNS\\config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
-    private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
+    // private String archivoConfig = System.getProperty("user.dir") + "\\DNS\\config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
+    // private String archivoLongLocal = System.getProperty("user.dir") + "\\DNS\\longLocal.inf"; // archivo config donde guardamos la lista de archivos
     //direciones para ubuntu
-    //private String archivoConfig = System.getProperty("user.dir") + "/DNS/config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
-    //private String archivoLongLocal = System.getProperty("user.dir") + "/DNS/longLocal.inf"; // archivo config donde guardamos la lista de archivos    
+    private String archivoConfig = System.getProperty("user.dir") + "/DNS/config.inf"; // archivo config donde guardamos el TTL, ruda de la carpeta y los archivos
+    private String archivoLongLocal = System.getProperty("user.dir") + "/DNS/longLocal.inf"; // archivo config donde guardamos la lista de archivos    
     private int TTL = 5000; // tiempo para revisar la carpeta
     private MenuGrafico menu; // menu grafico
     private Middleware middleware; // middleware
-    public InetAddress[] ipPc = new InetAddress[1];// ip de las pc de los compañeros
+    public InetAddress[] ipPc = new InetAddress[2];// ip de las pc de los compañeros
 
     public VerArchivos() {
         try {
             // Agregar direcciones IP a tu arreglo
-            ipPc[0] = InetAddress.getByName("192.168.100.95");
+            ipPc[0] = InetAddress.getByName("172.31.1.196");
+            ipPc[1] = InetAddress.getByName("172.31.9.170");
+
+
             //ipPc[0] = InetAddress.getByName("192.168.100.14");
 
             // descomentar segun el numero de usuarios
@@ -127,15 +130,16 @@ class VerArchivos extends Thread {
                         e.printStackTrace();
                     }
                     System.out.println("pcServer: " + ipPc[0]);
-                }/*
+                }
                 if (lineCount == 5) {// la linea 5 es la direccion ip del equipo 2
                     try {
-                        ipPc[1] = InetAddress.getByName(line);
+                        ipPc[1] = InetAddress.getByName("172.31.9.170");
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
                     }
                     System.out.println("pcServer: " + ipPc[1]);
-                }if (lineCount == 6) {// la linea 6 es la direccion ip del equipo 3
+                }/*
+                if (lineCount == 6) {// la linea 6 es la direccion ip del equipo 3
                     try {
                         ipPc[2] = InetAddress.getByName(line);
                     } catch (UnknownHostException e) {
@@ -187,8 +191,8 @@ class VerArchivos extends Thread {
             writer.write(archivoLongLocal);// guardamos la direccion del archivo config
             writer.newLine();
             writer.write(ipPc[0].getHostAddress());// guardamos la direccion ip del equipo 1
-            //writer.newLine();
-            //writer.write(ipPc[1].getHostAddress());// guardamos la direccion ip del equipo 2
+            writer.newLine();
+            writer.write(ipPc[1].getHostAddress());// guardamos la direccion ip del equipo 2
             //writer.newLine();
             //writer.write(ipPc[2].getHostAddress());// guardamos la direccion ip del equipo 3
             //writer.newLine();

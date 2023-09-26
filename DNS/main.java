@@ -20,9 +20,9 @@ public class main {
         servidor.agregarMiddleware(middleware);
         middleware.vincularArchivos(verArchivos);
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
+        //try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\DNS\\config.inf"))) {
             // linea para linux
-        // try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/DNS/config.inf"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/DNS/config.inf"))) {
             // si entramos aqui entonces el archivo config existe y no es el primer inicio del programa
             primerInicio = false;// no el el primer inicio
             String line;
