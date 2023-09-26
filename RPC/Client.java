@@ -15,15 +15,21 @@ public class Client {
             //Obtener una referencia al objeto remoto utilizando su nombre registrado
             RemoteCalculator calculator = (RemoteCalculator) registry.lookup("Calculator");
             int numRespuestas = 0;
-            do{
+            while (numRespuestas < calculator.para()){
                 int aux = calculator.contador();
                 if (aux != -1) {
                     resultados.add(aux);
                     System.out.println("Response: " + aux);
                     numRespuestas++;
+                    System.out.println(numRespuestas);
                 }
-            }while (numRespuestas < calculator.para());
-
+                try {
+                    Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // Manejar la excepción si se interrumpe el hilo durante la pausa
+                        e.printStackTrace();
+                    }
+                }
         }catch(Exception error){
             error.printStackTrace();
         }

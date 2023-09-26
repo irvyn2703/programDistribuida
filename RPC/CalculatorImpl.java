@@ -39,12 +39,12 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
             // Verificamos si la lista está vacía o si es la misma IP que la última en la lista
             if (hosts.isEmpty() || !clientIP.equals(hosts.get(hosts.size() - 1))) {
                 this.contador++;
-                hosts.add(clientIP);
                 if(!hosts.contains(clientIP)){
                     numClientes++;
                 }
+                hosts.add(clientIP);
                 // Imprimimos la IP y el contador
-                System.out.println("Client IP: " + clientIP + " response:" + this.contador + "numero de clientes:" + numClientes);
+                System.out.println("Client IP: " + clientIP + " response:" + this.contador + " --> numero de clientes:" + numClientes);
                 return this.contador;
             }
             return -1;
@@ -55,6 +55,10 @@ public class CalculatorImpl extends UnicastRemoteObject implements RemoteCalcula
     }
 
     public int para()throws RemoteException{
-        return (stopDePara/numClientes);
+        if(numClientes == 0){
+            return 100;
+        }else{
+            return (stopDePara/numClientes);
+        }
     }
 }
