@@ -14,21 +14,29 @@ public class Client {
 
             //Obtener una referencia al objeto remoto utilizando su nombre registrado
             RemoteCalculator calculator = (RemoteCalculator) registry.lookup("Calculator");
+
+            // llevamos el conteo de las respuesta obtenidas desde el servidor
             int numRespuestas = 0;
+
+            // entramos en el while mientras que el numRespuestas sea menor que calculator.para() enviado desde el server
             while (numRespuestas < calculator.para()){
+                // guardamos la respuesta del servidor
                 int aux = calculator.contador();
+
+                // verificamos que la respuesta sea distinta a -1
                 if (aux != -1) {
+                    // guardamos la respuesta
                     resultados.add(aux);
                     System.out.println("Response: " + aux);
+                    // aumentanos el numero de respuestas
                     numRespuestas++;
-                    System.out.println(numRespuestas);
                 }
                 try {
+                    // dormimos el programa para ver mejor el proceso en el servidor
                     Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        // Manejar la excepción si se interrumpe el hilo durante la pausa
-                        e.printStackTrace();
-                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 }
         }catch(Exception error){
             error.printStackTrace();
